@@ -60,17 +60,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Generator\Data\ComponentData.cs" />
+    <Compile Include="Generator\Data\ReactiveSystemData.cs" />
     <Compile Include="Generator\DocCreator.cs" />
-    <Compile Include="Generator\MarkdownConverter.cs" />
+    <Compile Include="Generator\Markdown\HeadCell.cs" />
+    <Compile Include="Generator\Markdown\MarkdownConverter.cs" />
+    <Compile Include="Generator\Data\SystemData.cs" />
     <Compile Include="Node.cs" />
+    <Compile Include="Parser\EntitasScriptParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="run_doc_generator.bat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="run_doc_generator.bat" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -86,6 +89,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call $(TargetDir)run_doc_generator.bat</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

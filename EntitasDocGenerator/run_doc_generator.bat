@@ -1,1 +1,1 @@
-EntitasDocGenerator.exe D:\My_Documents\Projects\NeonZuma\NeonZuma_2.0\Assets\Source_code D:\My_Documents\Projects\NeonZuma /d
+D:\My_Documents\Projects\Entitas-Doc-Generator\EntitasDocGenerator\bin\Debug\EntitasDocGenerator.exe D:\My_Documents\Projects\NeonZuma\NeonZuma_2.0\Assets\Source_code D:\My_Documents\Projects\NeonZuma

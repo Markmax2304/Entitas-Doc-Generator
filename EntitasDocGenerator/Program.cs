@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace EntitasDocGenerator
 {
@@ -12,19 +13,26 @@ namespace EntitasDocGenerator
 
         static void Main(string[] args)
         {
-            string sourceDirectory = args[0];// @"D:\My_Documents\Projects\NeonZuma\NeonZuma_2.0\Assets\Source_code";
-            string docDirectory = args[1];// @"D:\My_Documents\Projects\NeonZuma";
-            bool includeDescription = string.Compare(descriptionSign, args[2]) == 0 ? true : false;
+            try
+            {
+                string sourceDirectory = args[0];//*/ @"D:\My_Documents\Projects\test_doc";
+                string docDirectory = args[1];//*/ @"D:\My_Documents\Projects\test_doc";
 
-            if (!Directory.Exists(sourceDirectory) || !Directory.Exists(docDirectory))
-                return;
+                if (!Directory.Exists(sourceDirectory) || !Directory.Exists(docDirectory))
+                    return;
 
-            Node root = new Node(sourceDirectory);
-            ParseDirectory(sourceDirectory, root);
+                Node root = new Node(sourceDirectory);
+                ParseDirectory(sourceDirectory, root);
 
-            DocCreator.CreateDocumetation(root, docDirectory, includeDescription);
+                DocCreator.CreateDocumetation(root, docDirectory);
 
-            //Console.ReadKey();
+                //Console.ReadKey();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.ReadKey();
+            }
         }
 
         static void ParseDirectory(string path, Node parent)
