@@ -31,7 +31,6 @@ namespace EntitasDocGenerator
 
         private const string reactiveSystemNameTable = "Reactive System";
         private const string EntityTable = "Entity";
-        private const string filterTable = "Filter";
         private const string triggerTable = "Triggers";
 
         private const string imgArrowUp = ":arrow_up:";
@@ -117,49 +116,54 @@ namespace EntitasDocGenerator
             }
 
             // system
-            writer.WriteLine(MarkdownConverter.GetTableHead(
-                new HeadCell(systemNameTable, AlignmentCell.None),
-                new HeadCell(typeTable, AlignmentCell.Left),
-                new HeadCell(descriptionTable, AlignmentCell.Left)));
-
-            foreach (var system in systems.Where(x => !x.IsReactive))
+            if (systems.Where(x => !x.IsReactive).Count() > 0)
             {
-                string description = system.Description.Replace("\r\n", "<br/>");
-                string types = system.Types.Count > 1 ?
-                    MarkdownConverter.ConvertToUnnumaricalList(system.Types) :
-                    system.Types.First();
+                writer.WriteLine(MarkdownConverter.GetTableHead(
+                    new HeadCell(systemNameTable, AlignmentCell.None),
+                    new HeadCell(typeTable, AlignmentCell.Left),
+                    new HeadCell(descriptionTable, AlignmentCell.Left)));
 
-                writer.WriteLine(MarkdownConverter.GetTableCustomRow(system.Name, types, description));
+                foreach (var system in systems.Where(x => !x.IsReactive))
+                {
+                    string description = system.Description.Replace("\r\n", "<br/>");
+                    string types = system.Types.Count > 1 ?
+                        MarkdownConverter.ConvertToUnnumaricalList(system.Types) :
+                        system.Types.First();
+
+                    writer.WriteLine(MarkdownConverter.GetTableCustomRow(system.Name, types, description));
+                }
+
+                writer.WriteLine(MarkdownConverter.GetHorizontalLine());
             }
-
-            writer.WriteLine(MarkdownConverter.GetHorizontalLine());
 
             // reactive
-            writer.WriteLine(MarkdownConverter.GetTableHead(
-                new HeadCell(reactiveSystemNameTable, AlignmentCell.None),
-                new HeadCell(typeTable, AlignmentCell.Left),
-                new HeadCell(EntityTable, AlignmentCell.Center),
-                new HeadCell(filterTable, AlignmentCell.Left),
-                new HeadCell(triggerTable, AlignmentCell.Left),
-                new HeadCell(descriptionTable, AlignmentCell.Left)));
-
-            foreach (var system in systems.Where(x => x.IsReactive))
+            if (systems.Where(x => x.IsReactive).Count() > 0)
             {
-                string description = system.Description.Replace("\r\n", "<br/>");
-                string types = system.Types.Count > 1 ?
-                    MarkdownConverter.ConvertToUnnumaricalList(system.Types) :
-                    (system.Types.FirstOrDefault() ?? imgNegCheckMark);
-                string triggerType = (string.IsNullOrEmpty(system.Reactive.TriggerType) ?
-                    string.Format("{0}:<br/>", system.Reactive.TriggerType) : string.Empty);
-                string triggers = system.Reactive.Triggers.Count > 1 ?
-                    MarkdownConverter.ConvertToUnnumaricalList(system.Reactive.Triggers) :
-                    (system.Reactive.Triggers.FirstOrDefault() ?? imgNegCheckMark);
+                writer.WriteLine(MarkdownConverter.GetTableHead(
+                    new HeadCell(reactiveSystemNameTable, AlignmentCell.None),
+                    new HeadCell(typeTable, AlignmentCell.Left),
+                    new HeadCell(EntityTable, AlignmentCell.Center),
+                    new HeadCell(triggerTable, AlignmentCell.Left),
+                    new HeadCell(descriptionTable, AlignmentCell.Left)));
 
-                writer.WriteLine(MarkdownConverter.GetTableCustomRow(system.Name, types, system.Reactive.Entity,
-                    system.Reactive.Filter, triggerType + triggers, description));
+                foreach (var system in systems.Where(x => x.IsReactive))
+                {
+                    string description = system.Description.Replace("\r\n", "<br/>");
+                    string types = system.Types.Count > 1 ?
+                        MarkdownConverter.ConvertToUnnumaricalList(system.Types) :
+                        (system.Types.FirstOrDefault() ?? imgNegCheckMark);
+                    string triggerType = (!string.IsNullOrEmpty(system.Reactive.TriggerType) ?
+                        string.Format("{0}:<br/>", system.Reactive.TriggerType) : string.Empty);
+                    string triggers = system.Reactive.Triggers.Count > 1 ?
+                        MarkdownConverter.ConvertToUnnumaricalList(system.Reactive.Triggers) :
+                        (system.Reactive.Triggers.FirstOrDefault() ?? imgNegCheckMark);
+
+                    writer.WriteLine(MarkdownConverter.GetTableCustomRow(system.Name, types, system.Reactive.Entity,
+                        triggerType + triggers, description));
+                }
+
+                writer.WriteLine(MarkdownConverter.GetHorizontalLine());
             }
-
-            writer.WriteLine(MarkdownConverter.GetHorizontalLine());
         }
 
         private static SystemData ParseSystemFile(string path)
@@ -179,7 +183,6 @@ namespace EntitasDocGenerator
                 {
                     record.Reactive = new ReactiveSystemData() { Entity = entity };
                     EntitasScriptParser.ParseSystemTriggers(fileText, record.Reactive);
-                    EntitasScriptParser.ParseSystemFilters(fileText, record.Reactive);
                 }
             }
 

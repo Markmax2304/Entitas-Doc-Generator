@@ -10,14 +10,12 @@ namespace EntitasDocGenerator
     {
         internal string Entity { get; set; }
         internal List<string> Triggers { get; set; }
-        internal string Filter { get; set; }
         internal string TriggerType { get; set; }
 
         internal ReactiveSystemData()
         {
             Entity = string.Empty;
             Triggers = new List<string>();
-            Filter = string.Empty;
             TriggerType = string.Empty;
         }
     }

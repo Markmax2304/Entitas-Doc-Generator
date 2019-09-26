@@ -24,7 +24,8 @@ namespace EntitasDocGenerator
         private static readonly Regex bodyComponentRegex = new Regex(@"\{(.*)\}");
         private static readonly Regex fieldRegex = new Regex(@"public\s+(.*)\s+[\w_]+");
 
-        private static readonly Regex typeSystemRegex = new Regex(@"[\s:,]+?I([\w_]+?)System[\s\n,{]+?");
+        private static readonly Regex classRegex = new Regex(@"class.+?:(.*?){");
+        private static readonly Regex typeSystemRegex = new Regex(@"I([\w_]+?)System");
         private static readonly Regex reactiveSystemRegex = new Regex(@"ReactiveSystem\<(.+?)Entity\>");
         private static readonly Regex triggerSystemRegex = new Regex(@"GetTrigger\(.+?\)\s*\{(.+?)\}");
         private static readonly Regex filterSystemRegex = new Regex(@"Filter\(.+?\)\s*\{\s*return\s+(.+?);\s*\}");
@@ -123,7 +124,8 @@ namespace EntitasDocGenerator
 
         internal static void ParseSystemTypes(string text, SystemData record)
         {
-            var matches = typeSystemRegex.Matches(text);
+            var types = classRegex.Match(text);
+            var matches = typeSystemRegex.Matches(types.Groups[1].Value);
             foreach(Match match in matches)
             {
                 record.Types.Add(match.Groups[1].Value);
@@ -160,15 +162,6 @@ namespace EntitasDocGenerator
                     record.Triggers.Add(match.Groups[1].Value);
                 }
             }
-        }
-
-        internal static void ParseSystemFilters(string text, ReactiveSystemData record)
-        {
-            var filter = filterSystemRegex.Match(text);
-            string returnLine = filter.Groups[1].Value;
-            record.Filter = returnLine.Replace("entity.", string.Empty)
-                .Replace("&&", andUpper).Replace("&", andUpper)
-                .Replace("||", orUpper).Replace("|", orUpper);
         }
         #endregion
     }
